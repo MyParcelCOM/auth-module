@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo -e "\033[0;30;47m Updating composer dependencies \033[0m"
+${COMPOSE} run --rm php composer update --no-plugins --no-scripts

@@ -1,0 +1,29 @@
+{
+  "name": "myparcelcom/auth-module",
+  "description": "Package for validating and jwt token for the myparcel.com api",
+  "type": "library",
+  "require": {
+    "php": ">=7.1",
+    "lcobucci/jwt": "^3.2",
+    "myparcelcom/json-api": "^0.6.17"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.2",
+    "phpunit/phpunit": "^7.5",
+    "squizlabs/php_codesniffer": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyParcelCom\\AuthModule\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MyParcelCom\\AuthModule\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "check-style": "vendor/bin/phpcs -p --standard=PSR12 --exclude=PSR2.ControlStructures.ControlStructureSpacing --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --warning-severity=6 app tests database/factories",
+    "fix-style": "vendor/bin/phpcbf -p --standard=PSR12 --exclude=PSR2.ControlStructures.ControlStructureSpacing --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --warning-severity=6 app tests database/factories"
+  }
+}

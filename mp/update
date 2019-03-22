@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo -e "\033[0;30;47m Installing composer dependencies from lock file \033[0m"
+${COMPOSE} run --rm php composer install --no-plugins --no-scripts
