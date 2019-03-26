@@ -10,7 +10,7 @@ use MyParcelCom\AuthModule\Contracts\UserRepositoryInterface;
 use MyParcelCom\AuthModule\JwtAuthenticator;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use PHPUnit\Framework\TestCase;
-use Tests\Traits\AccessTokenTrait;
+use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 
 class JwtAuthenticatorTest extends TestCase
 {
@@ -63,7 +63,7 @@ class JwtAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticateWithInvalidSignature()
     {
-        $privateKeyResource = openssl_pkey_new();
+        $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
         $token = $this->createTokenString([], null, 'some-user-id', [], false);
         $this->expectException(InvalidAccessTokenException::class);
