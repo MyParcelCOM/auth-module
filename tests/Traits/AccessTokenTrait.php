@@ -9,7 +9,6 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
-use MyParcelCom\AuthModule\AccessToken;
 
 trait AccessTokenTrait
 {
@@ -42,15 +41,13 @@ trait AccessTokenTrait
      * @param int|null $expiration
      * @param string   $userId
      * @param array    $claims
-     * @param bool     $persist
      * @return string
      */
     protected function createTokenString(
         array $scopes = [],
         int $expiration = null,
         string $userId = 'some-user-id',
-        array $claims = [],
-        bool $persist = true
+        array $claims = []
     ): string {
         $builder = new Builder();
         $builder
@@ -63,14 +60,6 @@ trait AccessTokenTrait
 
         if ($expiration !== null) {
             $builder->setExpiration($expiration);
-        }
-
-        if ($persist === true) {
-            $accessToken = factory(AccessToken::class)->create([
-                'user_id' => $userId,
-            ]);
-
-            $builder->setHeader('jti', $accessToken->getId());
         }
 
         $signer = new Sha256();
@@ -89,17 +78,15 @@ trait AccessTokenTrait
      * @param int|null $expiration
      * @param string   $userId
      * @param array    $claims
-     * @param bool     $persist
      * @return Token
      */
     protected function createParsedToken(
         array $scopes = [],
         int $expiration = null,
         string $userId = 'some-user-id',
-        array $claims = [],
-        bool $persist = true
+        array $claims = []
     ): Token {
-        $tokenString = $this->createTokenString($scopes, $expiration, $userId, $claims, $persist);
+        $tokenString = $this->createTokenString($scopes, $expiration, $userId, $claims);
 
         return (new Parser())->parse($tokenString);
     }

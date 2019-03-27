@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
+use Lcobucci\JWT\Token;
 use Mockery;
-use MyParcelCom\AuthModule\Contracts\UserInterface;
-use MyParcelCom\AuthModule\Contracts\UserRepositoryInterface;
 use MyParcelCom\AuthModule\JwtAuthenticator;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use PHPUnit\Framework\TestCase;
@@ -19,22 +18,15 @@ class JwtAuthenticatorTest extends TestCase
     /** @var JwtAuthenticator */
     protected $jwtAuthenticator;
 
-    /** @var UserInterface */
-    protected $user;
-
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = Mockery::mock(UserInterface::class);
 
         $this->generateKeys();
 
         $this->jwtAuthenticator = (new JwtAuthenticator())
-            ->setPublicKey($this->publicKey)
-            ->setUserRepository(Mockery::mock(UserRepositoryInterface::class, [
-                'makeAuthenticatedUser' => $this->user,
-            ]));
+            ->setPublicKey($this->publicKey);
     }
 
     protected function tearDown()
@@ -47,14 +39,14 @@ class JwtAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticate()
     {
-        $token = $this->createTokenString([], null, 'some-user-id', [], false);
-        $this->assertSame($this->user, $this->jwtAuthenticator->authenticate($token));
+        $token = $this->createTokenString([], null, 'some-user-id', []);
+        $this->assertInstanceOf(Token::class, $this->jwtAuthenticator->authenticate($token));
     }
 
     /** @test */
     public function testAuthenticateWithInvalidToken()
     {
-        $token = $this->createTokenString([], null, 'some-user-id', [], false);
+        $token = $this->createTokenString([], null, 'some-user-id', []);
         $token .= 'this-will-make-it-invalid';
         $this->expectException(InvalidAccessTokenException::class);
         $this->jwtAuthenticator->authenticate($token);
@@ -65,7 +57,7 @@ class JwtAuthenticatorTest extends TestCase
     {
         $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
-        $token = $this->createTokenString([], null, 'some-user-id', [], false);
+        $token = $this->createTokenString([], null, 'some-user-id', []);
         $this->expectException(InvalidAccessTokenException::class);
         $this->jwtAuthenticator->authenticate($token);
     }
@@ -73,7 +65,7 @@ class JwtAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticateWithExpiredToken()
     {
-        $token = $this->createTokenString([], time() - 100, 'some-user-id', [], false);
+        $token = $this->createTokenString([], time() - 100, 'some-user-id', []);
         $this->expectException(InvalidAccessTokenException::class);
         $this->jwtAuthenticator->authenticate($token);
     }

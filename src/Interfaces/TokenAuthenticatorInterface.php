@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MyParcelCom\AuthModule\Contracts;
+namespace MyParcelCom\AuthModule\Interfaces;
+
+use Lcobucci\JWT\Token;
 
 interface TokenAuthenticatorInterface
 {
@@ -10,7 +12,7 @@ interface TokenAuthenticatorInterface
      * Authenticate given token and return the user associated with that token.
      *
      * @param string $token
-     * @return UserInterface
+     * @return Token
      */
-    public function authenticate(string $token): UserInterface;
+    public function authenticate(string $token): Token;
 }

@@ -8,10 +8,9 @@ use Exception;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use MyParcelCom\AuthModule\Contracts\TokenAuthenticatorInterface;
-use MyParcelCom\AuthModule\Contracts\UserInterface;
-use MyParcelCom\AuthModule\Contracts\UserRepositoryInterface;
+use MyParcelCom\AuthModule\Interfaces\TokenAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
+use Lcobucci\JWT\Token;
 
 /**
  * Token authenticator that authenticates JWT tokens.
@@ -21,15 +20,12 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
     /** @var string */
     private $publicKey;
 
-    /** @var UserRepositoryInterface */
-    private $userRepository;
-
     /**
      * @param string $token
-     * @return UserInterface
+     * @return Token
      * @throws Exception
      */
-    public function authenticate(string $token): UserInterface
+    public function authenticate(string $token): Token
     {
         $parser = new Parser();
 
@@ -47,7 +43,7 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
                 throw new InvalidAccessTokenException('Token expired');
             }
 
-            $user = $this->getUserRepository()->makeAuthenticatedUser($parsedToken);
+            return $parsedToken;
         } catch (InvalidAccessTokenException $exception) {
             // Rethrow the exception so it is caught by the exception handler
             // instead of this try catch block.
@@ -55,8 +51,6 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
         } catch (Exception $exception) {
             throw new InvalidAccessTokenException('Token could not be parsed', $exception);
         }
-
-        return $user;
     }
 
     /**
@@ -74,25 +68,6 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
     public function setPublicKey(string $publicKey): self
     {
         $this->publicKey = $publicKey;
-
-        return $this;
-    }
-
-    /**
-     * @return UserRepositoryInterface
-     */
-    public function getUserRepository(): UserRepositoryInterface
-    {
-        return $this->userRepository;
-    }
-
-    /**
-     * @param UserRepositoryInterface $userRepository
-     * @return $this
-     */
-    public function setUserRepository(UserRepositoryInterface $userRepository): self
-    {
-        $this->userRepository = $userRepository;
 
         return $this;
     }
