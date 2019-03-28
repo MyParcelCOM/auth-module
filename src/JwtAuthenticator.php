@@ -21,16 +21,21 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
     private $publicKey;
 
     /**
-     * @param string $token
-     * @return Token
+     * @param string $authorizationHeader
+     * @return null|Token
      * @throws Exception
      */
-    public function authenticate(string $token): Token
+    public function authenticateAuthorizationHeader(?string $authorizationHeader): Token
     {
+        if ($authorizationHeader === null || strpos($authorizationHeader, 'Bearer ') !== 0) {
+            throw new InvalidAccessTokenException('No or invalid Authorization header supplied');
+        }
+
+        $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
         $parser = new Parser();
 
         try {
-            $parsedToken = $parser->parse($token);
+            $parsedToken = $parser->parse($tokenString);
 
             $signer = new Sha256();
             $publicKey = new Key($this->getPublicKey());

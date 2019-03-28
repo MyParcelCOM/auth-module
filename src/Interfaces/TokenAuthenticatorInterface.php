@@ -9,10 +9,10 @@ use Lcobucci\JWT\Token;
 interface TokenAuthenticatorInterface
 {
     /**
-     * Authenticate given token and return the user associated with that token.
+     * Authenticate given Authorization header and return the Token.
      *
      * @param string $token
      * @return Token
      */
-    public function authenticate(string $token): Token;
+    public function authenticateAuthorizationHeader(string $token): Token;
 }

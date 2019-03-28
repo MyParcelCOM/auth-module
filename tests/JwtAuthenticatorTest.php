@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
-use Lcobucci\JWT\Token;
 use Mockery;
 use MyParcelCom\AuthModule\JwtAuthenticator;
+use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use PHPUnit\Framework\TestCase;
-use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 
 class JwtAuthenticatorTest extends TestCase
 {
@@ -21,7 +20,6 @@ class JwtAuthenticatorTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-
 
         $this->generateKeys();
 
@@ -37,19 +35,20 @@ class JwtAuthenticatorTest extends TestCase
     }
 
     /** @test */
-    public function testAuthenticate()
+    public function testAuthenticateAuthorizationHeader()
     {
-        $token = $this->createTokenString([], null, 'some-user-id', []);
-        $this->assertInstanceOf(Token::class, $this->jwtAuthenticator->authenticate($token));
+        $this->expectNotToPerformAssertions();
+        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
+        $this->jwtAuthenticator->authenticateAuthorizationHeader($authorizationHeader);
     }
 
     /** @test */
     public function testAuthenticateWithInvalidToken()
     {
-        $token = $this->createTokenString([], null, 'some-user-id', []);
-        $token .= 'this-will-make-it-invalid';
+        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
+        $authorizationHeader .= 'this-will-make-it-invalid';
         $this->expectException(InvalidAccessTokenException::class);
-        $this->jwtAuthenticator->authenticate($token);
+        $this->jwtAuthenticator->authenticateAuthorizationHeader($authorizationHeader);
     }
 
     /** @test */
@@ -57,23 +56,23 @@ class JwtAuthenticatorTest extends TestCase
     {
         $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
-        $token = $this->createTokenString([], null, 'some-user-id', []);
+        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
         $this->expectException(InvalidAccessTokenException::class);
-        $this->jwtAuthenticator->authenticate($token);
+        $this->jwtAuthenticator->authenticateAuthorizationHeader($authorizationHeader);
     }
 
     /** @test */
     public function testAuthenticateWithExpiredToken()
     {
-        $token = $this->createTokenString([], time() - 100, 'some-user-id', []);
+        $authorizationHeader ='Bearer '. $this->createTokenString([], time() - 100, 'some-user-id', []);
         $this->expectException(InvalidAccessTokenException::class);
-        $this->jwtAuthenticator->authenticate($token);
+        $this->jwtAuthenticator->authenticateAuthorizationHeader($authorizationHeader);
     }
 
     /** @test */
     public function testAccessTokenParsing()
     {
         $this->expectException(InvalidAccessTokenException::class);
-        $this->jwtAuthenticator->authenticate('r.i.p');
+        $this->jwtAuthenticator->authenticateAuthorizationHeader('r.i.p');
     }
 }
