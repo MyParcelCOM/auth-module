@@ -9,17 +9,17 @@ use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
 use Mockery;
 use MyParcelCom\AuthModule\Interfaces\TokenAuthenticatorInterface;
-use MyParcelCom\AuthModule\Middleware\CheckForScopes;
+use MyParcelCom\AuthModule\Middleware\CheckForAnyScope;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 use MyParcelCom\JsonApi\Exceptions\MissingScopeException;
 use PHPUnit\Framework\TestCase;
 
-class CheckForScopesTest extends TestCase
+class CheckForAnyScopeTest extends TestCase
 {
     use AccessTokenTrait;
 
-    /** @var CheckForScopes */
-    protected $checkForScopes;
+    /** @var CheckForAnyScope */
+    protected $checkForAnyScopes;
 
     /** @var Request */
     protected $request;
@@ -42,7 +42,7 @@ class CheckForScopesTest extends TestCase
             return true;
         };
         $this->request = $this->createAuthorizationRequest();
-        $this->checkForScopes = new CheckForScopes();
+        $this->checkForAnyScopes = new CheckForAnyScope();
     }
 
     protected function tearDown()
@@ -55,35 +55,34 @@ class CheckForScopesTest extends TestCase
     /** @test */
     public function testHandle()
     {
-        $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
-        $this->assertTrue($this->checkForScopes->handle($this->request, $this->trueClosure, 'test-scope'));
+        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope'));
     }
 
     /** @test */
-    public function testHandleWithMissingScopesGivesMissingScopeExceptionWhenMissingOnlyOne()
+    public function testHandleWithOnlyOneScopeExisting()
     {
-        $this->expectException(MissingScopeException::class);
-        $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
-        $this->checkForScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2');
+        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2'));
     }
 
     /** @test */
     public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne()
     {
         $this->expectException(MissingScopeException::class);
-        $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope2','test-scope3']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope2','test-scope3']));
 
-        $this->checkForScopes->handle($this->request, $this->trueClosure, 'test-scope');
+        $this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope');
     }
 
     /** @test */
     public function testHandleWithMultipleScopes()
     {
-        $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope','test-scope2','test-scope3']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope','test-scope2','test-scope3']));
 
-        $this->assertTrue($this->checkForScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2'));
+        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2'));
     }
 
     protected function createAuthenticatorReturningScopes($scopes = []): TokenAuthenticatorInterface

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelCom\AuthModule\Interfaces;
 
 use Lcobucci\JWT\Token;
+use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 
 interface TokenAuthenticatorInterface
 {
@@ -13,6 +14,7 @@ interface TokenAuthenticatorInterface
      *
      * @param string $token
      * @return Token
+     * @throws InvalidAccessTokenException
      */
     public function authenticateAuthorizationHeader(string $token): Token;
 }

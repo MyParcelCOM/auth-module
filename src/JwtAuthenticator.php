@@ -8,9 +8,9 @@ use Exception;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token;
 use MyParcelCom\AuthModule\Interfaces\TokenAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
-use Lcobucci\JWT\Token;
 
 /**
  * Token authenticator that authenticates JWT tokens.
@@ -23,18 +23,18 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
     /**
      * @param string $authorizationHeader
      * @return null|Token
-     * @throws Exception
+     * @throws InvalidAccessTokenException
      */
     public function authenticateAuthorizationHeader(?string $authorizationHeader): Token
     {
-        if ($authorizationHeader === null || strpos($authorizationHeader, 'Bearer ') !== 0) {
-            throw new InvalidAccessTokenException('No or invalid Authorization header supplied');
-        }
-
-        $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
-        $parser = new Parser();
-
         try {
+            if ($authorizationHeader === null || strpos($authorizationHeader, 'Bearer ') !== 0) {
+                throw new InvalidAccessTokenException('No or invalid Authorization header supplied');
+            }
+
+            $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
+            $parser = new Parser();
+
             $parsedToken = $parser->parse($tokenString);
 
             $signer = new Sha256();
