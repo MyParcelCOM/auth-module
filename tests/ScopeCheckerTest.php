@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
-use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
 use Mockery;
-use MyParcelCom\AuthModule\Interfaces\TokenAuthenticatorInterface;
+use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\AuthModule\Middleware\ScopeChecker;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
-use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
 use PHPUnit\Framework\TestCase;
 
 class ScopeCheckerTest extends TestCase
@@ -56,23 +54,14 @@ class ScopeCheckerTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
-    public function testTokenCanWithRequestWithoutAuthorizationHeader()
-    {
-        $this->expectException(MissingTokenException::class);
-        $authenticator = $this->createAuthenticatorReturningScopes(['some-other-scope']);
-
-        $this->scopeChecker->setRequest(new Request())->setAuthenticator($authenticator)->tokenCan('some-scope');
-    }
-
     /**
      * @param array $scopes
-     * @return TokenAuthenticatorInterface
+     * @return RequestAuthenticatorInterface
      */
-    protected function createAuthenticatorReturningScopes($scopes = []): TokenAuthenticatorInterface
+    protected function createAuthenticatorReturningScopes($scopes = []): RequestAuthenticatorInterface
     {
         $token = Mockery::mock(Token::class, ['getClaim' => implode(' ', $scopes)]);
 
-        return Mockery::mock(TokenAuthenticatorInterface::class, ['authenticateAuthorizationHeader' => $token]);
+        return Mockery::mock(RequestAuthenticatorInterface::class, ['authenticate' => $token]);
     }
 }

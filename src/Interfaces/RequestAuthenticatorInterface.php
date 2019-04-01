@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Interfaces;
 
+use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
+use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
 
-interface TokenAuthenticatorInterface
+interface RequestAuthenticatorInterface
 {
     /**
      * Authenticate given Authorization header and return the Token.
      *
-     * @param string $token
+     * @param Request $request
      * @return Token
      * @throws InvalidAccessTokenException
+     * @throws MissingTokenException
      */
-    public function authenticateAuthorizationHeader(string $token): Token;
+    public function authenticate(Request $request): Token;
 }

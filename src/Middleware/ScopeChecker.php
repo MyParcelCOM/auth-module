@@ -6,7 +6,7 @@ namespace MyParcelCom\AuthModule\Middleware;
 
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
-use MyParcelCom\AuthModule\Interfaces\TokenAuthenticatorInterface;
+use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
 
@@ -15,7 +15,7 @@ class ScopeChecker
     /** @var Token */
     private $token;
 
-    /** @var TokenAuthenticatorInterface */
+    /** @var RequestAuthenticatorInterface */
     private $authenticator;
 
     /** @var Request */
@@ -49,17 +49,7 @@ class ScopeChecker
             return $this->token;
         }
 
-        try {
-            $authorizationHeader = $this->getRequest()->headers->get('Authorization');
-
-            if (!$authorizationHeader) {
-                throw new MissingTokenException();
-            }
-
-            $this->token = $this->getAuthenticator()->authenticateAuthorizationHeader($authorizationHeader);
-        } catch (InvalidAccessTokenException $exception) {
-            throw $exception;
-        }
+        $this->token = $this->getAuthenticator()->authenticate($this->getRequest());
 
         return $this->token;
     }
@@ -84,10 +74,10 @@ class ScopeChecker
     }
 
     /**
-     * @param TokenAuthenticatorInterface $authenticator
+     * @param RequestAuthenticatorInterface $authenticator
      * @return $this
      */
-    public function setAuthenticator(TokenAuthenticatorInterface $authenticator)
+    public function setAuthenticator(RequestAuthenticatorInterface $authenticator)
     {
         $this->authenticator = $authenticator;
 
@@ -95,9 +85,9 @@ class ScopeChecker
     }
 
     /**
-     * @return TokenAuthenticatorInterface
+     * @return RequestAuthenticatorInterface
      */
-    public function getAuthenticator(): TokenAuthenticatorInterface
+    public function getAuthenticator(): RequestAuthenticatorInterface
     {
         return $this->authenticator;
     }
