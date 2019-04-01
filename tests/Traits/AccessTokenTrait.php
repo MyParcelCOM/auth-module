@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests\Traits;
 
+use Illuminate\Http\Request;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
@@ -112,5 +113,17 @@ trait AccessTokenTrait
         $headers['Authorization'] = 'Bearer ' . $this->createTokenString($scopes, $expiration, $userId, $claims);
 
         return $headers;
+    }
+
+    /**
+     * @param array $params
+     * @return Request
+     */
+    protected function createAuthorizationRequest(...$params): Request
+    {
+        $request = new Request();
+        $request->headers->set('Authorization', 'Bearer ' . $this->createTokenString(...$params));
+
+        return $request;
     }
 }

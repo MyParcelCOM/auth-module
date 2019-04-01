@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
+use Exception;
 use Mockery;
 use MyParcelCom\AuthModule\JwtAuthenticator;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
@@ -75,4 +76,13 @@ class JwtAuthenticatorTest extends TestCase
         $this->expectException(InvalidAccessTokenException::class);
         $this->jwtAuthenticator->authenticateAuthorizationHeader('r.i.p');
     }
+
+    /** @test */
+    public function testGetPublicKeyExceptionWithoutKey()
+    {
+        $this->jwtAuthenticator = new JwtAuthenticator();
+        $this->expectException(Exception::class);
+        $this->jwtAuthenticator->getPublicKey();
+    }
+
 }

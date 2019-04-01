@@ -92,12 +92,4 @@ class CheckForScopesTest extends TestCase
 
         return Mockery::mock(TokenAuthenticatorInterface::class, ['authenticateAuthorizationHeader' => $token]);
     }
-
-    protected function createAuthorizationRequest($scopes = []): Request
-    {
-        $request = new Request();
-        $request->headers->set('Authorization', 'Bearer ' . $this->createTokenString([]));
-
-        return $request;
-    }
 }

@@ -60,9 +60,14 @@ class JwtAuthenticator implements TokenAuthenticatorInterface
 
     /**
      * @return string
+     * @throws Exception
      */
     public function getPublicKey(): string
     {
+        if (!$this->publicKey) {
+            throw new Exception('Public Key not provided for JwtAuthenticator');
+        }
+
         return $this->publicKey;
     }
 
