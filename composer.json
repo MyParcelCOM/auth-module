@@ -1,6 +1,6 @@
 {
   "name": "myparcelcom/auth-module",
-  "description": "Package for validating and jwt token for the myparcel.com api",
+  "description": "Package for validating an jwt token and to check its scopes",
   "type": "library",
   "require": {
     "php": ">=7.1",
