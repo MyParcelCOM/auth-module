@@ -1,12 +1,12 @@
 {
   "name": "myparcelcom/auth-module",
-  "description": "Package for validating an jwt token and to check its scopes",
+  "description": "Package for validating a JWT token and checking the contained scopes",
   "type": "library",
   "require": {
     "php": ">=7.1",
     "lcobucci/jwt": "^3.2",
     "myclabs/php-enum": "^1.5",
-    "myparcelcom/json-api": "^0.6.17"
+    "myparcelcom/json-api": "^0.7.0"
   },
   "require-dev": {
     "mockery/mockery": "^1.2",
