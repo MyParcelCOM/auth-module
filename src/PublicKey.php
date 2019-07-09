@@ -13,6 +13,9 @@ class PublicKey
     /** @var string */
     protected const CACHE_KEY = 'public-key';
 
+    /** @var string */
+    protected const CACHE_TTL = 'P30D';
+
     /** @var CacheInterface */
     protected $cache;
 
@@ -51,7 +54,7 @@ class PublicKey
 
         // Cache the key if a cache is set.
         if (isset($this->cache)) {
-            $this->cache->set(self::CACHE_KEY, $keyString, new DateInterval('P30D'));
+            $this->cache->set(self::CACHE_KEY, $keyString, new DateInterval(self::CACHE_TTL));
         }
 
         return $keyString;
