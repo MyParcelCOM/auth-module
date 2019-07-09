@@ -52,24 +52,18 @@ trait AccessTokenTrait
     ): string {
         $builder = new Builder();
         $builder
-            ->set('user_id', $userId)
-            ->set('scope', implode(' ', $scopes));
+            ->withClaim('user_id', $userId)
+            ->withClaim('scope', implode(' ', $scopes));
 
         array_walk($claims, function ($value, $claim) use ($builder) {
-            $builder->set($claim, $value);
+            $builder->withClaim($claim, $value);
         });
 
         if ($expiration !== null) {
-            $builder->setExpiration($expiration);
+            $builder->expiresAt($expiration);
         }
 
-        $signer = new Sha256();
-
-        $key = new Key($this->privateKey);
-
-        $builder->sign($signer, $key);
-
-        return (string)$builder->getToken();
+        return (string) $builder->getToken(new Sha256(), new Key($this->privateKey));
     }
 
     /**

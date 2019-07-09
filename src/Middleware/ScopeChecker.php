@@ -26,8 +26,8 @@ class ScopeChecker
      *
      * @param string $scope
      * @return bool
-     * @throws MissingTokenException
      * @throws InvalidAccessTokenException
+     * @throws MissingTokenException
      */
     public function tokenCan(string $scope): bool
     {
