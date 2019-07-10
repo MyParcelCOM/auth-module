@@ -16,7 +16,7 @@ class PublicKeyTest extends TestCase
     /** @var PublicKey */
     private $key;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -74,7 +74,7 @@ class PublicKeyTest extends TestCase
     {
         $publicKey = new PublicKey();
 
-        $keyString = str_random(128);
+        $keyString = Str::random(128);
         $tempFile = tempnam(sys_get_temp_dir(), 'key');
         file_put_contents($tempFile, $keyString);
 

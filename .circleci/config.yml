@@ -1,19 +1,18 @@
 version: 2
 jobs:
   build:
-    machine:
-      image: circleci/classic:edge
-
+    docker:
+      - image: myparcelcom/php:7.2-cli
+        auth:
+          username: ${DOCKER_USER}
+          password: ${DOCKER_PASSWORD}
     steps:
       - checkout
-
       - run:
           name: Setup dependencies
           command: |
-            ./mp.sh setup
-
+            composer install
       - run:
           name: Run tests
           command: |
-            ./mp.sh test
-            if [ "$(head -n 3 build/report.junit.xml | grep 'errors="0"' | grep 'failures="0"')" == '' ]; then exit 1; else exit 0; fi
+            vendor/bin/phpunit --no-coverage

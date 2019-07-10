@@ -39,14 +39,9 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
             }
 
             $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
-            $parser = new Parser();
+            $parsedToken = (new Parser())->parse($tokenString);
 
-            $parsedToken = $parser->parse($tokenString);
-
-            $signer = new Sha256();
-            $publicKey = new Key($this->getPublicKey());
-
-            if (!$parsedToken->verify($signer, $publicKey)) {
+            if (!$parsedToken->verify(new Sha256(), new Key($this->getPublicKey()))) {
                 throw new InvalidAccessTokenException('Token could not be verified');
             }
 
@@ -56,8 +51,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
 
             return $parsedToken;
         } catch (InvalidAccessTokenException $exception) {
-            // Rethrow the exception so it is caught by the exception handler
-            // instead of this try catch block.
+            // Rethrow the exception so it is caught by the exception handler instead of this try catch block.
             throw $exception;
         } catch (MissingTokenException $exception) {
             throw $exception;

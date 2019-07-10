@@ -18,7 +18,7 @@ class ScopeCheckerTest extends TestCase
     /** @var ScopeChecker */
     protected $scopeChecker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -27,7 +27,7 @@ class ScopeCheckerTest extends TestCase
         $this->scopeChecker = new ScopeChecker();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

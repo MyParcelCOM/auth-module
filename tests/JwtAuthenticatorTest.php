@@ -20,7 +20,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     /** @var JwtRequestAuthenticator */
     protected $authenticator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class JwtRequestAuthenticatorTest extends TestCase
             ->setPublicKey($this->publicKey);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -41,7 +41,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     public function testAuthenticate()
     {
         $this->expectNotToPerformAssertions();
-        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
+        $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->authenticator->authenticate($request);
@@ -50,7 +50,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticateWithInvalidToken()
     {
-        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
+        $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $authorizationHeader .= 'this-will-make-it-invalid';
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
@@ -63,7 +63,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     {
         $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
-        $authorizationHeader = 'Bearer '.$this->createTokenString([], null, 'some-user-id', []);
+        $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->expectException(InvalidAccessTokenException::class);
@@ -73,7 +73,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticateWithExpiredToken()
     {
-        $authorizationHeader ='Bearer '. $this->createTokenString([], time() - 100, 'some-user-id', []);
+        $authorizationHeader = 'Bearer ' . $this->createTokenString([], time() - 100, 'some-user-id', []);
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);

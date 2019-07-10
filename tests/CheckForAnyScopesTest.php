@@ -33,7 +33,7 @@ class CheckForAnyScopeTest extends TestCase
     /** @var RequestAuthenticatorInterface */
     protected $authenticator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -45,7 +45,7 @@ class CheckForAnyScopeTest extends TestCase
         $this->checkForAnyScopes = new CheckForAnyScope();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -65,14 +65,17 @@ class CheckForAnyScopeTest extends TestCase
     {
         $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
-        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2'));
+        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
     }
 
     /** @test */
     public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne()
     {
         $this->expectException(MissingScopeException::class);
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope2','test-scope3']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
+            'test-scope2',
+            'test-scope3',
+        ]));
 
         $this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope');
     }
@@ -80,9 +83,13 @@ class CheckForAnyScopeTest extends TestCase
     /** @test */
     public function testHandleWithMultipleScopes()
     {
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope','test-scope2','test-scope3']));
+        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
+            'test-scope',
+            'test-scope2',
+            'test-scope3',
+        ]));
 
-        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope','test-scope2'));
+        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
     }
 
     protected function createAuthenticatorReturningScopes($scopes = []): RequestAuthenticatorInterface
