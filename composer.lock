@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ab7801fb2534ea5d55f5d2c90faaa4d",
+    "content-hash": "af534c209317e40521c83dc997bc6cb2",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -864,16 +864,16 @@
         },
         {
             "name": "myparcelcom/json-api",
-            "version": "v0.8.4",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyParcelCOM/json-api.git",
-                "reference": "16cc9742f9edb3bd0cbb1e28123a0281e67f01ac"
+                "reference": "14002eb42f85314102dfa283b077a83b7632aef5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyParcelCOM/json-api/zipball/16cc9742f9edb3bd0cbb1e28123a0281e67f01ac",
-                "reference": "16cc9742f9edb3bd0cbb1e28123a0281e67f01ac",
+                "url": "https://api.github.com/repos/MyParcelCOM/json-api/zipball/14002eb42f85314102dfa283b077a83b7632aef5",
+                "reference": "14002eb42f85314102dfa283b077a83b7632aef5",
                 "shasum": ""
             },
             "require": {
@@ -900,20 +900,20 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "MyParcel.com shared library with JSON API related exceptions, interfaces, traits and utility classes.",
             "homepage": "https://www.myparcel.com",
-            "time": "2019-09-20T13:13:43+00:00"
+            "time": "2020-03-31T08:48:01+00:00"
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.32.1",
+            "version": "2.32.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "ecb525c766deb3bbbb6a0082ea0e41d3d9ae477c"
+                "reference": "f10e22cf546704fab1db4ad4b9dedbc5c797a0dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/ecb525c766deb3bbbb6a0082ea0e41d3d9ae477c",
-                "reference": "ecb525c766deb3bbbb6a0082ea0e41d3d9ae477c",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/f10e22cf546704fab1db4ad4b9dedbc5c797a0dc",
+                "reference": "f10e22cf546704fab1db4ad4b9dedbc5c797a0dc",
                 "shasum": ""
             },
             "require": {
@@ -971,7 +971,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2020-03-26T13:04:10+00:00"
+            "time": "2020-03-31T13:43:19+00:00"
         },
         {
             "name": "opis/closure",
