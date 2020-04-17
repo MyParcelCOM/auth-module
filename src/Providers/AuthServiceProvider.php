@@ -15,10 +15,8 @@ class AuthServiceProvider extends ServiceProvider
 {
     /**
      * Register the application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(RequestAuthenticatorInterface::class, function (Container $app) {
             return $app->make(JwtRequestAuthenticator::class);

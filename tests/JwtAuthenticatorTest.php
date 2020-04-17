@@ -102,5 +102,4 @@ class JwtRequestAuthenticatorTest extends TestCase
         $this->expectException(Exception::class);
         $this->authenticator->getPublicKey();
     }
-
 }
