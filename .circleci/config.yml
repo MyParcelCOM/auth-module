@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: myparcelcom/php:7.2-cli
+      - image: myparcelcom/php:7.3-cli
         auth:
           username: ${DOCKER_USER}
           password: ${DOCKER_PASSWORD}
