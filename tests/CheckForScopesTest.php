@@ -24,14 +24,8 @@ class CheckForScopesTest extends TestCase
     /** @var Request */
     protected $request;
 
-    /** @var Token */
-    protected $token;
-
     /** @var Closure */
     protected $trueClosure;
-
-    /** @var RequestAuthenticatorInterface */
-    protected $authenticator;
 
     protected function setUp(): void
     {

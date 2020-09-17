@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Support\Str;
 use MyParcelCom\AuthModule\PublicKey;
 use MyParcelCom\AuthModule\Tests\Mocks\CacheMock;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 
 class PublicKeyTest extends TestCase
@@ -105,7 +104,7 @@ class PublicKeyTest extends TestCase
     {
         $publicKey = new PublicKey();
 
-        $this->expectException(Warning::class);
+        $this->expectWarning();
         $publicKey->setPath('fly-me-to-the-moon/and-let-me-play-among/exceptions')->getKeyString();
     }
 }
