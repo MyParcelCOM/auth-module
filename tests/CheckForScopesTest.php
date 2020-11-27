@@ -6,17 +6,17 @@ namespace MyParcelCom\AuthModule\Tests;
 
 use Closure;
 use Illuminate\Http\Request;
-use Lcobucci\JWT\Token;
 use Mockery;
-use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\AuthModule\Middleware\CheckForScopes;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
+use MyParcelCom\AuthModule\Tests\Traits\ScopeTrait;
 use MyParcelCom\JsonApi\Exceptions\MissingScopeException;
 use PHPUnit\Framework\TestCase;
 
 class CheckForScopesTest extends TestCase
 {
     use AccessTokenTrait;
+    use ScopeTrait;
 
     /** @var CheckForScopes */
     protected $checkForScopes;
@@ -85,12 +85,5 @@ class CheckForScopesTest extends TestCase
         ]));
 
         $this->assertTrue($this->checkForScopes->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
-    }
-
-    protected function createAuthenticatorReturningScopes($scopes = []): RequestAuthenticatorInterface
-    {
-        $token = Mockery::mock(Token::class, ['getClaim' => implode(' ', $scopes)]);
-
-        return Mockery::mock(RequestAuthenticatorInterface::class, ['authenticate' => $token]);
     }
 }

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
-use Lcobucci\JWT\Token;
 use Mockery;
-use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\AuthModule\Middleware\ScopeChecker;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
+use MyParcelCom\AuthModule\Tests\Traits\ScopeTrait;
 use PHPUnit\Framework\TestCase;
 
 class ScopeCheckerTest extends TestCase
 {
     use AccessTokenTrait;
+    use ScopeTrait;
 
     /** @var ScopeChecker */
     protected $scopeChecker;
@@ -52,16 +52,5 @@ class ScopeCheckerTest extends TestCase
 
         $result = $this->scopeChecker->setRequest($request)->setAuthenticator($authenticator)->tokenCan('some-scope');
         $this->assertFalse($result);
-    }
-
-    /**
-     * @param array $scopes
-     * @return RequestAuthenticatorInterface
-     */
-    protected function createAuthenticatorReturningScopes($scopes = []): RequestAuthenticatorInterface
-    {
-        $token = Mockery::mock(Token::class, ['getClaim' => implode(' ', $scopes)]);
-
-        return Mockery::mock(RequestAuthenticatorInterface::class, ['authenticate' => $token]);
     }
 }
