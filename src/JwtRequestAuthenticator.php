@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule;
 
+use DateTimeImmutable;
 use Exception;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
@@ -40,8 +41,8 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
                 throw new InvalidAccessTokenException('Invalid Authorization header supplied');
             }
 
-            $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
-            $parsedToken = (new Parser())->parse($tokenString);
+            $jwt = str_ireplace('Bearer ', '', $authorizationHeader);
+            $parsedToken = (new Parser())->parse($jwt);
 
             $constraint = new SignedWith(new Sha256(), new Key($this->getPublicKey()));
             $valid = (new Validator())->validate($parsedToken, $constraint);
@@ -50,7 +51,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
                 throw new InvalidAccessTokenException('Token could not be verified');
             }
 
-            if ($parsedToken->isExpired()) {
+            if ($parsedToken->isExpired(new DateTimeImmutable())) {
                 throw new InvalidAccessTokenException('Token expired');
             }
 
