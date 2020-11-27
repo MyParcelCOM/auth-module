@@ -10,6 +10,8 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Validator;
 use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
@@ -41,7 +43,10 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
             $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
             $parsedToken = (new Parser())->parse($tokenString);
 
-            if (!$parsedToken->verify(new Sha256(), new Key($this->getPublicKey()))) {
+            $constraint = new SignedWith(new Sha256(), new Key($this->getPublicKey()));
+            $valid = (new Validator())->validate($parsedToken, $constraint);
+
+            if (!$valid) {
                 throw new InvalidAccessTokenException('Token could not be verified');
             }
 
