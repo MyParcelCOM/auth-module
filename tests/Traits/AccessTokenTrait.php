@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests\Traits;
 
+use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -60,7 +61,7 @@ trait AccessTokenTrait
         });
 
         if ($expiration !== null) {
-            $builder->expiresAt($expiration);
+            $builder->expiresAt((new DateTimeImmutable())->setTimestamp($expiration));
         }
 
         return (string) $builder->getToken(new Sha256(), new Key($this->privateKey));

@@ -31,7 +31,7 @@ class ScopeChecker
      */
     public function tokenCan(string $scope): bool
     {
-        $scopeString = $this->getToken()->getClaim('scope');
+        $scopeString = $this->getToken()->claims()->get('scope');
 
         $scopes = explode(' ', $scopeString);
 

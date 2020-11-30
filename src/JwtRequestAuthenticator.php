@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule;
 
+use DateTimeImmutable;
 use Exception;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Validator;
 use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
@@ -38,14 +41,17 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
                 throw new InvalidAccessTokenException('Invalid Authorization header supplied');
             }
 
-            $tokenString = str_ireplace('Bearer ', '', $authorizationHeader);
-            $parsedToken = (new Parser())->parse($tokenString);
+            $jwt = str_ireplace('Bearer ', '', $authorizationHeader);
+            $parsedToken = (new Parser())->parse($jwt);
 
-            if (!$parsedToken->verify(new Sha256(), new Key($this->getPublicKey()))) {
+            $constraint = new SignedWith(new Sha256(), new Key($this->getPublicKey()));
+            $valid = (new Validator())->validate($parsedToken, $constraint);
+
+            if (!$valid) {
                 throw new InvalidAccessTokenException('Token could not be verified');
             }
 
-            if ($parsedToken->isExpired()) {
+            if ($parsedToken->isExpired(new DateTimeImmutable())) {
                 throw new InvalidAccessTokenException('Token expired');
             }
 
