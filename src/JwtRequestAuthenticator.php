@@ -30,19 +30,10 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
      */
     public function authenticate(Request $request): Token
     {
-        $authorizationHeader = $request->header('Authorization');
-
         try {
-            if (!$authorizationHeader) {
-                throw new MissingTokenException();
-            }
-
-            if (strpos($authorizationHeader, 'Bearer ') !== 0) {
-                throw new InvalidAccessTokenException('Invalid Authorization header supplied');
-            }
-
-            $jwt = str_ireplace('Bearer ', '', $authorizationHeader);
-            $parsedToken = (new Parser())->parse($jwt);
+            $parsedToken = (new Parser())->parse(
+                $this->getTokenString($request)
+            );
 
             $constraint = new SignedWith(new Sha256(), new Key($this->getPublicKey()));
             $valid = (new Validator())->validate($parsedToken, $constraint);
@@ -88,5 +79,34 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
         $this->publicKey = $publicKey;
 
         return $this;
+    }
+
+    /**
+     * Get the token string
+     *
+     * Either extract it from Authorization: Bearer header or from access_token query parameter
+     *
+     * @param Request $request
+     * @return string
+     * @throws InvalidAccessTokenException
+     * @throws MissingTokenException
+     */
+    private function getTokenString(Request $request): string
+    {
+        $authorizationHeader = $request->header('Authorization');
+
+        if (!$authorizationHeader) {
+            if (!$request->has('access_token')) {
+                throw new MissingTokenException();
+            }
+
+            return $request->query('access_token');
+        }
+
+        if (strpos($authorizationHeader, 'Bearer ') !== 0) {
+            throw new InvalidAccessTokenException('Invalid Authorization header supplied');
+        }
+
+        return str_ireplace('Bearer ', '', $authorizationHeader);
     }
 }
