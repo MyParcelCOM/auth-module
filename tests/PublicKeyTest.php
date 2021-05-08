@@ -37,6 +37,15 @@ class PublicKeyTest extends TestCase
     }
 
     /** @test */
+    public function testGetKeyStringWithoutSsl(): void
+    {
+        $keyString = $this->key->setVerifySsl(false)->getKeyString();
+
+        $this->assertIsString($keyString);
+        $this->assertEquals('this-is-an-oauth-key', $keyString);
+    }
+
+    /** @test */
     public function testToString(): void
     {
         $this->assertEquals($this->key->getKeyString(), (string) $this->key);

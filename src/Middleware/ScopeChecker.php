@@ -58,7 +58,7 @@ class ScopeChecker
      * @param Request $request
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): self
     {
         $this->request = $request;
 
@@ -77,7 +77,7 @@ class ScopeChecker
      * @param RequestAuthenticatorInterface $authenticator
      * @return $this
      */
-    public function setAuthenticator(RequestAuthenticatorInterface $authenticator)
+    public function setAuthenticator(RequestAuthenticatorInterface $authenticator): self
     {
         $this->authenticator = $authenticator;
 
