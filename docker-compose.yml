@@ -9,6 +9,7 @@ services:
     working_dir: /opt/auth-module
     volumes:
       - .:/opt/auth-module
+      - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - composercache:/tmp
 
 volumes:

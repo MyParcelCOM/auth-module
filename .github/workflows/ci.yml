@@ -1,14 +1,21 @@
 name: CI
 
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: php-actions/composer@v5
-      - name: PHPUnit Tests
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Composer
+        uses: php-actions/composer@v5
+        with:
+          php_version: 7.4
+
+      - name: PHPUnit
         uses: php-actions/phpunit@v2
         with:
+          php_version: 7.4
           configuration: phpunit.xml

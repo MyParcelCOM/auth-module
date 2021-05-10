@@ -40,23 +40,34 @@ class JwtRequestAuthenticatorTest extends TestCase
     /** @test */
     public function testAuthenticate()
     {
-        $this->expectNotToPerformAssertions();
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
 
-        $this->authenticator->authenticate($request);
+        $token = $this->authenticator->authenticate($request);
+        $this->assertEquals('some-user-id', $token->claims()->get('user_id'));
     }
 
     /** @test */
     public function testAuthenticateWithQueryParameter()
     {
-        $this->expectNotToPerformAssertions();
         $request = Mockery::mock(Request::class, [
             'has'    => true,
             'header' => null,
             'query'  => $this->createTokenString([], null, 'some-user-id', []),
         ]);
 
+        $token = $this->authenticator->authenticate($request);
+        $this->assertEquals('some-user-id', $token->claims()->get('user_id'));
+    }
+
+    /** @test */
+    public function testAuthenticateWithInvalidKey()
+    {
+        $this->authenticator->setPublicKey('');
+        $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
+
+        $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);
     }
 

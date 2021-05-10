@@ -5,7 +5,7 @@ set -eo pipefail
 set -o allexport
 {
   ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-  COMPOSE="docker-compose --project-name myparcelcomjsonapi"
+  COMPOSE="docker-compose --project-name myparcelcomauthmodule"
 }
 set +o allexport
 
