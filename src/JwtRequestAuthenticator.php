@@ -7,12 +7,11 @@ namespace MyParcelCom\AuthModule;
 use DateTimeImmutable;
 use Exception;
 use Illuminate\Http\Request;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Validator;
 use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
@@ -31,12 +30,17 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
     public function authenticate(Request $request): Token
     {
         try {
-            $parsedToken = (new Parser())->parse(
+            $config = Configuration::forSymmetricSigner(
+                new Sha256(),
+                InMemory::plainText($this->getPublicKey())
+            );
+
+            $parsedToken = $config->parser()->parse(
                 $this->getTokenString($request)
             );
 
-            $constraint = new SignedWith(new Sha256(), new Key($this->getPublicKey()));
-            $valid = (new Validator())->validate($parsedToken, $constraint);
+            $constraint = new SignedWith($config->signer(), $config->signingKey());
+            $valid = $config->validator()->validate($parsedToken, $constraint);
 
             if (!$valid) {
                 throw new InvalidAccessTokenException('Token could not be verified');
