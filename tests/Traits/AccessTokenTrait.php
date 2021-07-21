@@ -6,9 +6,8 @@ namespace MyParcelCom\AuthModule\Tests\Traits;
 
 use DateTimeImmutable;
 use Illuminate\Http\Request;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 
@@ -19,6 +18,9 @@ trait AccessTokenTrait
 
     /** @var string */
     protected $publicKey;
+
+    /** @var Configuration */
+    protected $config;
 
     /**
      * Generate RSA keys.
@@ -34,6 +36,12 @@ trait AccessTokenTrait
         if ($overrideConfig) {
             config(['auth.public_key' => $this->publicKey]);
         }
+
+        $this->config = Configuration::forAsymmetricSigner(
+            new Sha256(),
+            InMemory::plainText($this->privateKey),
+            InMemory::plainText($this->publicKey)
+        );
     }
 
     /**
@@ -51,7 +59,7 @@ trait AccessTokenTrait
         string $userId = '',
         array $claims = []
     ): string {
-        $builder = new Builder();
+        $builder = $this->config->builder();
         $builder
             ->withClaim('user_id', $userId)
             ->withClaim('scope', implode(' ', $scopes));
@@ -64,7 +72,7 @@ trait AccessTokenTrait
             $builder->expiresAt((new DateTimeImmutable())->setTimestamp($expiration));
         }
 
-        return (string) $builder->getToken(new Sha256(), new Key($this->privateKey));
+        return $builder->getToken($this->config->signer(), $this->config->signingKey())->toString();
     }
 
     /**
@@ -84,7 +92,7 @@ trait AccessTokenTrait
     ): Token {
         $tokenString = $this->createTokenString($scopes, $expiration, $userId, $claims);
 
-        return (new Parser())->parse($tokenString);
+        return $this->config->parser()->parse($tokenString);
     }
 
     /**

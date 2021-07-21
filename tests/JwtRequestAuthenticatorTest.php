@@ -87,6 +87,8 @@ class JwtRequestAuthenticatorTest extends TestCase
     {
         $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
+        $this->generateKeys();
+
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
 

@@ -1,4 +1,4 @@
-FROM composer:1.8
+FROM composer:2
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && pecl install xdebug \

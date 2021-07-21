@@ -5,7 +5,7 @@ services:
     build:
       context: ./docker
       dockerfile: Dockerfile
-    image: myparcelcom/auth-module-php:v1-dev
+    image: myparcelcom/auth-module-php:v2-dev
     working_dir: /opt/auth-module
     volumes:
       - .:/opt/auth-module
