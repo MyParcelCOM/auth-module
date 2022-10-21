@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
-use Exception;
+use Error;
 use Illuminate\Support\Str;
 use MyParcelCom\AuthModule\PublicKey;
 use MyParcelCom\AuthModule\Tests\Mocks\CacheMock;
@@ -12,8 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class PublicKeyTest extends TestCase
 {
-    /** @var PublicKey */
-    private $key;
+    private PublicKey $key;
 
     protected function setUp(): void
     {
@@ -104,7 +103,7 @@ class PublicKeyTest extends TestCase
     {
         $publicKey = new PublicKey();
 
-        $this->expectException(Exception::class);
+        $this->expectException(Error::class);
         $publicKey->getKeyString();
     }
 

@@ -14,8 +14,6 @@ interface RequestAuthenticatorInterface
     /**
      * Authenticate given Authorization header and return the Token.
      *
-     * @param Request $request
-     * @return Token
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
      */

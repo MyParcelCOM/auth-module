@@ -13,23 +13,16 @@ use Lcobucci\JWT\Token;
 
 trait AccessTokenTrait
 {
-    /** @var string */
-    protected $privateKey;
-
-    /** @var string */
-    protected $publicKey;
-
-    /** @var Configuration */
-    protected $config;
+    protected Configuration $config;
+    protected string $privateKey = '';
+    protected string $publicKey;
 
     /**
      * Generate RSA keys.
-     *
-     * @param bool $overrideConfig
      */
-    protected function generateKeys(bool $overrideConfig = false)
+    protected function generateKeys(bool $overrideConfig = false): void
     {
-        $privateKeyResource = openssl_pkey_new(['private_key_bits' => 1024]);
+        $privateKeyResource = openssl_pkey_new(['private_key_bits' => 2048]);
         openssl_pkey_export($privateKeyResource, $this->privateKey);
         $this->publicKey = openssl_pkey_get_details($privateKeyResource)['key'];
 
@@ -46,12 +39,6 @@ trait AccessTokenTrait
 
     /**
      * Create a new access token.
-     *
-     * @param array    $scopes
-     * @param int|null $expiration
-     * @param string   $userId
-     * @param array    $claims
-     * @return string
      */
     protected function createTokenString(
         array $scopes = [],
@@ -77,12 +64,6 @@ trait AccessTokenTrait
 
     /**
      * Create a token parsed to a JWT object.
-     *
-     * @param array    $scopes
-     * @param int|null $expiration
-     * @param string   $userId
-     * @param array    $claims
-     * @return Token
      */
     protected function createParsedToken(
         array $scopes = [],
@@ -98,13 +79,6 @@ trait AccessTokenTrait
     /**
      * Create a headers array with an access token in it. Optionally a headers array can be supplied and the auth header
      * will be added to this array.
-     *
-     * @param array    $scopes
-     * @param int|null $expiration
-     * @param string   $userId
-     * @param array    $claims
-     * @param array    $headers
-     * @return array
      */
     protected function createAuthorizationHeaders(
         string $userId = 'some-user-id',
@@ -118,10 +92,6 @@ trait AccessTokenTrait
         return $headers;
     }
 
-    /**
-     * @param array $params
-     * @return Request
-     */
     protected function createAuthorizationRequest(...$params): Request
     {
         $request = new Request();

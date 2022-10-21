@@ -12,20 +12,13 @@ use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
 
 class ScopeChecker
 {
-    /** @var Token */
-    private $token;
-
-    /** @var RequestAuthenticatorInterface */
-    private $authenticator;
-
-    /** @var Request */
-    private $request;
+    private RequestAuthenticatorInterface $authenticator;
+    private Request $request;
+    private ?Token $token = null;
 
     /**
      * Check if a token contains a scope.
      *
-     * @param string $scope
-     * @return bool
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
      */
@@ -39,7 +32,6 @@ class ScopeChecker
     }
 
     /**
-     * @return Token
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
      */
@@ -54,10 +46,6 @@ class ScopeChecker
         return $this->token;
     }
 
-    /**
-     * @param Request $request
-     * @return $this
-     */
     public function setRequest(Request $request): self
     {
         $this->request = $request;
@@ -65,18 +53,11 @@ class ScopeChecker
         return $this;
     }
 
-    /**
-     * @return Request
-     */
     public function getRequest(): Request
     {
         return $this->request;
     }
 
-    /**
-     * @param RequestAuthenticatorInterface $authenticator
-     * @return $this
-     */
     public function setAuthenticator(RequestAuthenticatorInterface $authenticator): self
     {
         $this->authenticator = $authenticator;
@@ -84,9 +65,6 @@ class ScopeChecker
         return $this;
     }
 
-    /**
-     * @return RequestAuthenticatorInterface
-     */
     public function getAuthenticator(): RequestAuthenticatorInterface
     {
         return $this->authenticator;

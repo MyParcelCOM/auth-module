@@ -12,11 +12,11 @@ use MyParcelCom\JsonApi\Exceptions\MissingScopeException;
 class CheckForScopes extends ScopeChecker implements ScopeCheckerInterface
 {
     /**
-     * Check an incoming request for all of the passed scopes.
+     * Check an incoming request for all the passed scopes.
      *
      * @inheritdoc
      */
-    public function handle(Request $request, Closure $next, ...$scopes)
+    public function handle(Request $request, Closure $next, ...$scopes): mixed
     {
         $this->setRequest($request);
 

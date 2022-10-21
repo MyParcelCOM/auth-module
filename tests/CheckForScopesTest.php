@@ -6,7 +6,7 @@ namespace MyParcelCom\AuthModule\Tests;
 
 use Closure;
 use Illuminate\Http\Request;
-use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use MyParcelCom\AuthModule\Middleware\CheckForScopes;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 use MyParcelCom\AuthModule\Tests\Traits\ScopeTrait;
@@ -16,16 +16,12 @@ use PHPUnit\Framework\TestCase;
 class CheckForScopesTest extends TestCase
 {
     use AccessTokenTrait;
+    use MockeryPHPUnitIntegration;
     use ScopeTrait;
 
-    /** @var CheckForScopes */
-    protected $checkForScopes;
-
-    /** @var Request */
-    protected $request;
-
-    /** @var Closure */
-    protected $trueClosure;
+    protected CheckForScopes $checkForScopes;
+    protected Request $request;
+    protected Closure $trueClosure;
 
     protected function setUp(): void
     {
@@ -39,15 +35,8 @@ class CheckForScopesTest extends TestCase
         $this->checkForScopes = new CheckForScopes();
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Mockery::close();
-    }
-
     /** @test */
-    public function testHandle()
+    public function testHandle(): void
     {
         $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
@@ -55,7 +44,7 @@ class CheckForScopesTest extends TestCase
     }
 
     /** @test */
-    public function testHandleWithMissingScopesGivesMissingScopeExceptionWhenMissingOnlyOne()
+    public function testHandleWithMissingScopesGivesMissingScopeExceptionWhenMissingOnlyOne(): void
     {
         $this->expectException(MissingScopeException::class);
         $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
@@ -64,7 +53,7 @@ class CheckForScopesTest extends TestCase
     }
 
     /** @test */
-    public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne()
+    public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne(): void
     {
         $this->expectException(MissingScopeException::class);
         $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
@@ -76,7 +65,7 @@ class CheckForScopesTest extends TestCase
     }
 
     /** @test */
-    public function testHandleWithMultipleScopes()
+    public function testHandleWithMultipleScopes(): void
     {
         $this->checkForScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
             'test-scope',
