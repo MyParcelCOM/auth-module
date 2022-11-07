@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelCom\AuthModule\Tests;
 
-use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use MyParcelCom\AuthModule\Middleware\ScopeChecker;
 use MyParcelCom\AuthModule\Tests\Traits\AccessTokenTrait;
 use MyParcelCom\AuthModule\Tests\Traits\ScopeTrait;
@@ -13,10 +13,10 @@ use PHPUnit\Framework\TestCase;
 class ScopeCheckerTest extends TestCase
 {
     use AccessTokenTrait;
+    use MockeryPHPUnitIntegration;
     use ScopeTrait;
 
-    /** @var ScopeChecker */
-    protected $scopeChecker;
+    protected ScopeChecker $scopeChecker;
 
     protected function setUp(): void
     {
@@ -27,15 +27,8 @@ class ScopeCheckerTest extends TestCase
         $this->scopeChecker = new ScopeChecker();
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Mockery::close();
-    }
-
     /** @test */
-    public function testTokenCan()
+    public function testTokenCan(): void
     {
         $request = $this->createAuthorizationRequest();
         $authenticator = $this->createAuthenticatorReturningScopes(['some-scope']);
@@ -45,7 +38,7 @@ class ScopeCheckerTest extends TestCase
     }
 
     /** @test */
-    public function testTokenCanNot()
+    public function testTokenCanNot(): void
     {
         $request = $this->createAuthorizationRequest();
         $authenticator = $this->createAuthenticatorReturningScopes(['some-other-scope']);

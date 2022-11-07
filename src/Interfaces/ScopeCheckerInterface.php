@@ -15,13 +15,9 @@ interface ScopeCheckerInterface
     /**
      * Authenticate given Authorization header and return the Token.
      *
-     * @param Request $request
-     * @param mixed   $next
-     * @param array   $scopes
-     * @return Closure
      * @throws MissingScopeException
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
      */
-    public function handle(Request $request, Closure $next, ...$scopes);
+    public function handle(Request $request, Closure $next, ...$scopes): mixed;
 }

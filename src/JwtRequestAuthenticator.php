@@ -21,8 +21,7 @@ use MyParcelCom\JsonApi\Exceptions\MissingTokenException;
  */
 class JwtRequestAuthenticator implements RequestAuthenticatorInterface
 {
-    /** @var string */
-    private $publicKey;
+    private string $publicKey;
 
     /**
      * @inheritDoc
@@ -61,23 +60,11 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
         }
     }
 
-    /**
-     * @return string
-     * @throws Exception
-     */
     public function getPublicKey(): string
     {
-        if (!$this->publicKey) {
-            throw new Exception('Public Key not provided for JwtRequestAuthenticator');
-        }
-
         return $this->publicKey;
     }
 
-    /**
-     * @param string $publicKey
-     * @return $this
-     */
     public function setPublicKey(string $publicKey): self
     {
         $this->publicKey = $publicKey;
@@ -87,11 +74,8 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
 
     /**
      * Get the token string
-     *
      * Either extract it from Authorization: Bearer header or from access_token query parameter
      *
-     * @param Request $request
-     * @return string
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
      */
@@ -107,7 +91,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
             return $request->query('access_token');
         }
 
-        if (strpos($authorizationHeader, 'Bearer ') !== 0) {
+        if (!str_starts_with($authorizationHeader, 'Bearer ')) {
             throw new InvalidAccessTokenException('Invalid Authorization header supplied');
         }
 

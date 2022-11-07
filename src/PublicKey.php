@@ -10,35 +10,21 @@ use RuntimeException;
 
 class PublicKey
 {
-    /** @var string */
     protected const CACHE_KEY = 'public-key';
-
-    /** @var string */
     protected const CACHE_TTL = 'P30D';
 
-    /** @var CacheInterface */
-    protected $cache;
-
-    /** @var string */
-    protected $path;
-
-    /** @var bool */
-    protected $verifySsl = true;
+    protected ?CacheInterface $cache = null;
+    protected string $path;
+    protected bool $verifySsl = true;
 
     /**
      * Get the public key as a string.
-     *
-     * @return string
      */
     public function getKeyString(): string
     {
         // Try and get the key from the cache.
         if (isset($this->cache) && !empty($keyString = $this->cache->get(self::CACHE_KEY))) {
             return $keyString;
-        }
-
-        if (!isset($this->path)) {
-            throw new RuntimeException('Public key path not set');
         }
 
         // Get the key contents from the file.
@@ -63,22 +49,15 @@ class PublicKey
     /**
      * Remove the public key from the cache.
      *
-     * @return $this
      * @throws RuntimeException
      */
     public function flushCache(): self
     {
-        if ($this->cache) {
-            $this->cache->delete(self::CACHE_KEY);
-        }
+        $this->cache?->delete(self::CACHE_KEY);
 
         return $this;
     }
 
-    /**
-     * @param CacheInterface $cache
-     * @return $this
-     */
     public function setCache(CacheInterface $cache): self
     {
         $this->cache = $cache;
@@ -86,10 +65,6 @@ class PublicKey
         return $this;
     }
 
-    /**
-     * @param string $path
-     * @return $this
-     */
     public function setPath(string $path): self
     {
         $this->path = $path;
@@ -100,9 +75,6 @@ class PublicKey
     /**
      * If the set path is a remote https url with an invalid cert,
      * setting this to false will disable the ssl cert check.
-     *
-     * @param bool $verifySsl
-     * @return $this
      */
     public function setVerifySsl(bool $verifySsl): self
     {
@@ -113,8 +85,6 @@ class PublicKey
 
     /**
      * Returns the public key as a string.
-     *
-     * @return string
      */
     public function __toString(): string
     {

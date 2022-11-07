@@ -16,7 +16,7 @@ class CheckForAnyScope extends ScopeChecker implements ScopeCheckerInterface
      *
      * @inheritdoc
      */
-    public function handle(Request $request, Closure $next, ...$scopes)
+    public function handle(Request $request, Closure $next, ...$scopes): mixed
     {
         $this->setRequest($request);
 

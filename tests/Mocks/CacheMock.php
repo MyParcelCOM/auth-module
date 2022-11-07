@@ -11,14 +11,14 @@ use Mockery;
 
 class CacheMock implements Repository
 {
-    public $data = [];
+    private array $data = [];
 
-    public function has($key)
+    public function has(string $key): bool
     {
         return array_key_exists($key, $this->data);
     }
 
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         if ($this->has($key)) {
             return $this->data[$key];
@@ -39,18 +39,18 @@ class CacheMock implements Repository
         return $default;
     }
 
-    public function put($key, $value, $minutes = null)
+    public function put($key, $value, $ttl = null)
     {
         $this->data[$key] = $value;
     }
 
-    public function add($key, $value, $minutes = null)
+    public function add($key, $value, $ttl = null)
     {
         if ($this->has($key)) {
             return false;
         }
 
-        $this->put($key, $value, $minutes);
+        $this->put($key, $value, $ttl);
 
         return true;
     }
@@ -78,13 +78,13 @@ class CacheMock implements Repository
         $this->data[$key] = $value;
     }
 
-    public function remember($key, $minutes, Closure $callback)
+    public function remember($key, $ttl, Closure $callback)
     {
         if ($this->has($key)) {
             return $this->get($key);
         }
 
-        $this->put($key, $value = $callback(), $minutes);
+        $this->put($key, $value = $callback(), $ttl);
 
         return $value;
     }
@@ -105,31 +105,35 @@ class CacheMock implements Repository
         return $this->sear($key, $callback);
     }
 
-    public function forget($key)
+    public function forget($key): bool
     {
         unset($this->data[$key]);
+
+        return true;
     }
 
-    public function set($key, $value, $ttl = null)
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $this->data[$key] = $value;
 
         return true;
     }
 
-    public function delete($key)
+    public function delete(string $key): bool
     {
         unset($this->data[$key]);
 
         return true;
     }
 
-    public function clear()
+    public function clear(): bool
     {
         $this->data = [];
+
+        return true;
     }
 
-    public function getMultiple($keys, $default = null)
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $return = [];
         foreach ($keys as $key) {
@@ -139,7 +143,7 @@ class CacheMock implements Repository
         return $return;
     }
 
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);
@@ -148,7 +152,7 @@ class CacheMock implements Repository
         return true;
     }
 
-    public function deleteMultiple($keys)
+    public function deleteMultiple(iterable $keys): bool
     {
         foreach ($keys as $key) {
             unset($this->data[$key]);

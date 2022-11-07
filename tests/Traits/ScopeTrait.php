@@ -11,11 +11,7 @@ use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 
 trait ScopeTrait
 {
-    /**
-     * @param array $scopes
-     * @return RequestAuthenticatorInterface
-     */
-    protected function createAuthenticatorReturningScopes($scopes = []): RequestAuthenticatorInterface
+    protected function createAuthenticatorReturningScopes(array $scopes = []): RequestAuthenticatorInterface
     {
         $token = Mockery::mock(Token::class, [
             'claims' => new DataSet([
