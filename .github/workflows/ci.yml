@@ -17,6 +17,7 @@ jobs:
       - name: PHPUnit
         uses: php-actions/phpunit@v3
         with:
+          php_extensions: xdebug
           php_version: 8.0
           configuration: phpunit.xml
           args: --coverage-text
