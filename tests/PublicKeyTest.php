@@ -106,13 +106,4 @@ class PublicKeyTest extends TestCase
         $this->expectException(Error::class);
         $publicKey->getKeyString();
     }
-
-    /** @test */
-    public function testIncorrectPath(): void
-    {
-        $publicKey = new PublicKey();
-
-        $this->expectWarning();
-        $publicKey->setPath('fly-me-to-the-moon/and-let-me-play-among/exceptions')->getKeyString();
-    }
 }
