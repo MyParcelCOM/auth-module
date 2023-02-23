@@ -21,3 +21,5 @@ jobs:
           php_version: 8.0
           configuration: phpunit.xml
           args: --coverage-text
+        env:
+          XDEBUG_MODE: coverage
