@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelCom\AuthModule\Tests\Mocks;
 
 use Closure;
+use DateInterval;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Cache\Store;
 use Mockery;
@@ -112,7 +113,7 @@ class CacheMock implements Repository
         return true;
     }
 
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
     {
         $this->data[$key] = $value;
 
@@ -143,7 +144,7 @@ class CacheMock implements Repository
         return $return;
     }
 
-    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);

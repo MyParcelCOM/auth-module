@@ -13,8 +13,6 @@ class CheckForScopes extends ScopeChecker implements ScopeCheckerInterface
 {
     /**
      * Check an incoming request for all the passed scopes.
-     *
-     * @inheritdoc
      */
     public function handle(Request $request, Closure $next, ...$scopes): mixed
     {

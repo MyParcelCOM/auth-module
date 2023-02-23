@@ -6,7 +6,7 @@ namespace MyParcelCom\AuthModule;
 
 use DateInterval;
 use Psr\SimpleCache\CacheInterface;
-use RuntimeException;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class PublicKey
 {
@@ -49,7 +49,7 @@ class PublicKey
     /**
      * Remove the public key from the cache.
      *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function flushCache(): self
     {
