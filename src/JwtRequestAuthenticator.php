@@ -23,9 +23,6 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
 {
     private string $publicKey;
 
-    /**
-     * @inheritDoc
-     */
     public function authenticate(Request $request): Token
     {
         try {
@@ -73,8 +70,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
     }
 
     /**
-     * Get the token string
-     * Either extract it from Authorization: Bearer header or from access_token query parameter
+     * Get the token string from the Authorization: Bearer header or from the access_token query parameter.
      *
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException

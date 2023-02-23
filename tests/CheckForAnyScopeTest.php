@@ -19,7 +19,7 @@ class CheckForAnyScopeTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ScopeTrait;
 
-    protected CheckForAnyScope $checkForAnyScopes;
+    protected CheckForAnyScope $scopeChecker;
     protected Request $request;
     protected Closure $trueClosure;
 
@@ -32,46 +32,46 @@ class CheckForAnyScopeTest extends TestCase
             return true;
         };
         $this->request = $this->createAuthorizationRequest();
-        $this->checkForAnyScopes = new CheckForAnyScope();
+        $this->scopeChecker = new CheckForAnyScope();
     }
 
     /** @test */
     public function testHandle(): void
     {
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
+        $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
-        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope'));
+        $this->assertTrue($this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope'));
     }
 
     /** @test */
     public function testHandleWithOnlyOneScopeExisting(): void
     {
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
+        $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
 
-        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
+        $this->assertTrue($this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
     }
 
     /** @test */
     public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne(): void
     {
         $this->expectException(MissingScopeException::class);
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
+        $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes([
             'test-scope2',
             'test-scope3',
         ]));
 
-        $this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope');
+        $this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope');
     }
 
     /** @test */
     public function testHandleWithMultipleScopes(): void
     {
-        $this->checkForAnyScopes->setAuthenticator($this->createAuthenticatorReturningScopes([
+        $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes([
             'test-scope',
             'test-scope2',
             'test-scope3',
         ]));
 
-        $this->assertTrue($this->checkForAnyScopes->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
+        $this->assertTrue($this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2'));
     }
 }
