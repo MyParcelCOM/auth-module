@@ -46,17 +46,17 @@ trait AccessTokenTrait
         string $userId = '',
         array $claims = []
     ): string {
-        $builder = $this->config->builder();
-        $builder
+        $builder = $this->config
+            ->builder()
             ->withClaim('user_id', $userId)
             ->withClaim('scope', implode(' ', $scopes));
 
-        array_walk($claims, function ($value, $claim) use ($builder) {
-            $builder->withClaim($claim, $value);
+        array_walk($claims, function ($value, $claim) use (&$builder) {
+            $builder = $builder->withClaim($claim, $value);
         });
 
         if ($expiration !== null) {
-            $builder->expiresAt((new DateTimeImmutable())->setTimestamp($expiration));
+            $builder = $builder->expiresAt((new DateTimeImmutable())->setTimestamp($expiration));
         }
 
         return $builder->getToken($this->config->signer(), $this->config->signingKey())->toString();
