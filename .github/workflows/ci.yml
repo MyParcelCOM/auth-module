@@ -21,7 +21,6 @@ jobs:
           php_extensions: xdebug
           php_version: 8.0
           configuration: phpunit.xml
-          args: --coverage-text
-          coverage_filter: coverage_text
+          coverage_text: true
         env:
           XDEBUG_MODE: coverage
