@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
-         testdox="true"
-         bootstrap="vendor/autoload.php"
-         cacheResult="false"
-         colors="true">
-    <coverage>
-        <include>
-            <directory suffix=".php">src/</directory>
-        </include>
-        <report>
-            <html outputDirectory="build/coverage"/>
-            <text outputFile="build/coverage.txt"/>
-        </report>
-    </coverage>
-    <testsuites>
-        <testsuite name="MyParcel.com Auth Module Test Suite">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-    <php>
-        <env name="XDEBUG_MODE" value="coverage"/>
-    </php>
-    <logging/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd" testdox="true" bootstrap="vendor/autoload.php" cacheResult="false" colors="true">
+  <coverage>
+    <report>
+      <html outputDirectory="build/coverage"/>
+      <text outputFile="build/coverage.txt"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="MyParcel.com Auth Module Test Suite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="XDEBUG_MODE" value="coverage"/>
+  </php>
+  <logging/>
+  <source>
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </source>
 </phpunit>
