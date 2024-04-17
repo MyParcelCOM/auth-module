@@ -26,7 +26,6 @@ class PublicKeyTest extends TestCase
         $this->key->setPath($tempFile);
     }
 
-    /** @test */
     public function testGetKeyString(): void
     {
         $keyString = $this->key->getKeyString();
@@ -35,7 +34,6 @@ class PublicKeyTest extends TestCase
         $this->assertEquals('this-is-an-oauth-key', $keyString);
     }
 
-    /** @test */
     public function testGetKeyStringWithoutSsl(): void
     {
         $keyString = $this->key->setVerifySsl(false)->getKeyString();
@@ -44,13 +42,11 @@ class PublicKeyTest extends TestCase
         $this->assertEquals('this-is-an-oauth-key', $keyString);
     }
 
-    /** @test */
     public function testToString(): void
     {
         $this->assertEquals($this->key->getKeyString(), (string) $this->key);
     }
 
-    /** @test */
     public function testCache(): void
     {
         $publicKey = $this->key->setCache(new CacheMock());
@@ -76,7 +72,6 @@ class PublicKeyTest extends TestCase
         );
     }
 
-    /** @test */
     public function testSetPath(): void
     {
         $publicKey = new PublicKey();
@@ -98,7 +93,6 @@ class PublicKeyTest extends TestCase
         );
     }
 
-    /** @test */
     public function testUnSetPath(): void
     {
         $publicKey = new PublicKey();

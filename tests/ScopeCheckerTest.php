@@ -27,7 +27,6 @@ class ScopeCheckerTest extends TestCase
         $this->scopeChecker = new ScopeChecker();
     }
 
-    /** @test */
     public function testTokenCan(): void
     {
         $request = $this->createAuthorizationRequest();
@@ -37,7 +36,6 @@ class ScopeCheckerTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
     public function testTokenCanNot(): void
     {
         $request = $this->createAuthorizationRequest();

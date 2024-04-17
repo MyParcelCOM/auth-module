@@ -28,14 +28,11 @@ class CheckForScopesTest extends TestCase
         parent::setUp();
 
         $this->generateKeys();
-        $this->trueClosure = function () {
-            return true;
-        };
+        $this->trueClosure = fn () => true;
         $this->request = $this->createAuthorizationRequest();
         $this->scopeChecker = new CheckForScopes();
     }
 
-    /** @test */
     public function testHandle(): void
     {
         $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes(['test-scope']));
@@ -43,7 +40,6 @@ class CheckForScopesTest extends TestCase
         $this->assertTrue($this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope'));
     }
 
-    /** @test */
     public function testHandleWithMissingScopesGivesMissingScopeExceptionWhenMissingOnlyOne(): void
     {
         $this->expectException(MissingScopeException::class);
@@ -52,7 +48,6 @@ class CheckForScopesTest extends TestCase
         $this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope', 'test-scope2');
     }
 
-    /** @test */
     public function testHandleWithMissingScopeGivesMissingScopeExceptionWhenMissingOne(): void
     {
         $this->expectException(MissingScopeException::class);
@@ -64,7 +59,6 @@ class CheckForScopesTest extends TestCase
         $this->scopeChecker->handle($this->request, $this->trueClosure, 'test-scope');
     }
 
-    /** @test */
     public function testHandleWithMultipleScopes(): void
     {
         $this->scopeChecker->setAuthenticator($this->createAuthenticatorReturningScopes([

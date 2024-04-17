@@ -12,15 +12,12 @@ jobs:
       - name: Composer
         uses: php-actions/composer@v6
         with:
-          php_version: 8.0
+          php_version: 8.2
 
       - name: PHPUnit
         uses: php-actions/phpunit@v3
         with:
-          bootstrap: vendor/autoload.php
-          test_suffix: Test.php
-          php_extensions: xdebug
+          args: --no-coverage
+          php_version: 8.2
           configuration: phpunit.xml
-          coverage_text: true
-        env:
-          XDEBUG_MODE: coverage
+          test_suffix: Test.php
