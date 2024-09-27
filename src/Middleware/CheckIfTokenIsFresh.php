@@ -14,7 +14,7 @@ readonly class CheckIfTokenIsFresh
 {
     public function __construct(
         private JwtRequestAuthenticator $requestAuthenticator,
-        private int $tokenMaxAge = 15,
+        private ?int $tokenMaxAge = 15,
     ) {
     }
 
