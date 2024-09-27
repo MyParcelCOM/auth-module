@@ -65,9 +65,9 @@ class CheckIfTokenIsFreshTest extends TestCase
             'authenticate' => $tokenMock,
         ]);
 
-        $middleware = new CheckIfTokenIsFresh($requestAuthenticator, 30);
+        $middleware = new CheckIfTokenIsFresh($requestAuthenticator);
         $this->assertTrue(
-            $middleware->handle(Mockery::mock(Request::class), fn () => true),
+            $middleware->handle(Mockery::mock(Request::class), fn () => true, 30),
         );
     }
 }

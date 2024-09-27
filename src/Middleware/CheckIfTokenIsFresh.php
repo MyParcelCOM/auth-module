@@ -14,18 +14,17 @@ readonly class CheckIfTokenIsFresh
 {
     public function __construct(
         private JwtRequestAuthenticator $requestAuthenticator,
-        private ?int $tokenMaxAge = 15,
     ) {
     }
 
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next, ?int $maxAge = 15): mixed
     {
         $token = $this->requestAuthenticator->authenticate($request);
-        $ageThreshold = Carbon::now()->subMinutes($this->tokenMaxAge);
+        $ageThreshold = Carbon::now()->subMinutes($maxAge);
 
         if ($token->hasBeenIssuedBefore($ageThreshold)) {
             throw new InvalidAccessTokenException(
-                "The access token cannot be older than {$this->tokenMaxAge} minutes for this request. Please request a new access token to continue.",
+                "The access token cannot be older than {$maxAge} minutes for this request. Please request a new access token to continue.",
             );
         }
 
