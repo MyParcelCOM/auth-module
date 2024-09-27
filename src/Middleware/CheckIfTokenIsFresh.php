@@ -25,7 +25,7 @@ readonly class CheckIfTokenIsFresh
 
         if ($token->hasBeenIssuedBefore($ageThreshold)) {
             throw new InvalidAccessTokenException(
-                "The access token cannot be older than {$this->tokenMaxAge} minutes for this request.",
+                "The access token cannot be older than {$this->tokenMaxAge} minutes for this request. Please request a new access token to continue.",
             );
         }
 
