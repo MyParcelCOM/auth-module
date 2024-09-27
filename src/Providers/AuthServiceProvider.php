@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->singleton(CheckIfTokenIsFresh::class, function (Container $app) {
             return new CheckIfTokenIsFresh(
                 $app->make(RequestAuthenticatorInterface::class),
-                config('auth.token_freshness'),
+                config('auth.token_freshness_threshold'),
             );
         });
     }
