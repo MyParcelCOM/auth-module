@@ -10,6 +10,7 @@ use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
 use MyParcelCom\AuthModule\Middleware\CheckForAnyScope;
 use MyParcelCom\AuthModule\Middleware\CheckForScopes;
+use MyParcelCom\AuthModule\Middleware\CheckIfTokenIsFresh;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->singleton(CheckForScopes::class, function (Container $app) {
             return (new CheckForScopes())
                 ->setAuthenticator($app->make(RequestAuthenticatorInterface::class));
+        });
+
+        $this->app->singleton(CheckIfTokenIsFresh::class, function (Container $app) {
+            return new CheckIfTokenIsFresh(
+                $app->make(RequestAuthenticatorInterface::class),
+                config('auth.token_freshness'),
+            );
         });
     }
 }
