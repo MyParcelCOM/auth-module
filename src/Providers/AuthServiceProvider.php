@@ -10,7 +10,7 @@ use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
 use MyParcelCom\AuthModule\Middleware\CheckForAnyScope;
 use MyParcelCom\AuthModule\Middleware\CheckForScopes;
-use MyParcelCom\AuthModule\Middleware\CheckIfTokenIsFresh;
+use MyParcelCom\AuthModule\Middleware\CheckTokenAllowedAge;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,8 +33,8 @@ class AuthServiceProvider extends ServiceProvider
                 ->setAuthenticator($app->make(RequestAuthenticatorInterface::class));
         });
 
-        $this->app->singleton(CheckIfTokenIsFresh::class, function (Container $app) {
-            return new CheckIfTokenIsFresh(
+        $this->app->singleton(CheckTokenAllowedAge::class, function (Container $app) {
+            return new CheckTokenAllowedAge(
                 $app->make(RequestAuthenticatorInterface::class),
             );
         });

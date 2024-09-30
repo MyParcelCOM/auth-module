@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
 use Mockery;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
-use MyParcelCom\AuthModule\Middleware\CheckIfTokenIsFresh;
+use MyParcelCom\AuthModule\Middleware\CheckTokenAllowedAge;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class CheckIfTokenIsFreshTest extends TestCase
             ->shouldReceive('authenticate')
             ->andThrow(Mockery::mock(InvalidAccessTokenException::class));
 
-        $middleware = new CheckIfTokenIsFresh($requestAuthenticator);
+        $middleware = new CheckTokenAllowedAge($requestAuthenticator);
         $this->expectException(InvalidAccessTokenException::class);
 
         $middleware->handle(Mockery::mock(Request::class), fn () => null);
@@ -45,7 +45,7 @@ class CheckIfTokenIsFreshTest extends TestCase
             'authenticate' => $tokenMock,
         ]);
 
-        $middleware = new CheckIfTokenIsFresh($requestAuthenticator);
+        $middleware = new CheckTokenAllowedAge($requestAuthenticator);
         $this->expectException(InvalidAccessTokenException::class);
         $middleware->handle(Mockery::mock(Request::class), fn () => null);
     }
@@ -65,7 +65,7 @@ class CheckIfTokenIsFreshTest extends TestCase
             'authenticate' => $tokenMock,
         ]);
 
-        $middleware = new CheckIfTokenIsFresh($requestAuthenticator);
+        $middleware = new CheckTokenAllowedAge($requestAuthenticator);
         $this->assertTrue(
             $middleware->handle(Mockery::mock(Request::class), fn () => true, 30),
         );

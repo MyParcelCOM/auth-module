@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 
-readonly class CheckIfTokenIsFresh
+readonly class CheckTokenAllowedAge
 {
     public function __construct(
         private JwtRequestAuthenticator $requestAuthenticator,
