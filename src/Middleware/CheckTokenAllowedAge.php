@@ -7,13 +7,13 @@ namespace MyParcelCom\AuthModule\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
-use MyParcelCom\AuthModule\JwtRequestAuthenticator;
+use MyParcelCom\AuthModule\Interfaces\RequestAuthenticatorInterface;
 use MyParcelCom\JsonApi\Exceptions\InvalidAccessTokenException;
 
 readonly class CheckTokenAllowedAge
 {
     public function __construct(
-        private JwtRequestAuthenticator $requestAuthenticator,
+        private RequestAuthenticatorInterface $requestAuthenticator,
     ) {
     }
 
