@@ -9,6 +9,7 @@ use Closure;
 use Hamcrest\Core\IsEqual;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Plain;
 use Mockery;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
 use MyParcelCom\AuthModule\Middleware\CheckTokenAllowedAge;
@@ -36,10 +37,11 @@ class CheckIfTokenIsFreshTest extends TestCase
 
         $tokenMock = Mockery::mock(Token::class);
         $tokenMock
-            ->shouldReceive('hasBeenIssuedBefore')
-            ->once()
+            ->expects('hasBeenIssuedBefore')
             ->with(IsEqual::equalTo(Carbon::now()->subMinutes(15)))
             ->andReturnTrue();
+        
+        $tokenMock->expects('claims->get')->andReturnFalse();
 
         $requestAuthenticator = Mockery::mock(JwtRequestAuthenticator::class, [
             'authenticate' => $tokenMock,
@@ -61,6 +63,8 @@ class CheckIfTokenIsFreshTest extends TestCase
             ->with(IsEqual::equalTo(Carbon::now()->subMinutes(30)))
             ->andReturnFalse();
 
+        $tokenMock->expects('claims->get')->andReturnFalse();
+
         $requestAuthenticator = Mockery::mock(JwtRequestAuthenticator::class, [
             'authenticate' => $tokenMock,
         ]);
@@ -69,5 +73,29 @@ class CheckIfTokenIsFreshTest extends TestCase
         $this->assertTrue(
             $middleware->handle(Mockery::mock(Request::class), fn () => true, 30),
         );
+    }
+
+    /** @test */
+    public function testItDoesNotConsiderRefreshedTokensAsFresh(): void
+    {
+        Carbon::setTestNow(now());
+
+        $tokenMock = Mockery::mock(Token::class);
+        $tokenMock
+            ->expects('hasBeenIssuedBefore')
+            ->andReturnFalse();
+
+        $tokenMock
+            ->expects('claims->get')
+            ->with('refreshed', false)
+            ->andReturnTrue();
+
+        $requestAuthenticator = Mockery::mock(JwtRequestAuthenticator::class, [
+            'authenticate' => $tokenMock,
+        ]);
+
+        $middleware = new CheckTokenAllowedAge($requestAuthenticator);
+        $this->expectException(InvalidAccessTokenException::class);
+        $middleware->handle(Mockery::mock(Request::class), fn () => null);
     }
 }
