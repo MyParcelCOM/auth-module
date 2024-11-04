@@ -22,9 +22,11 @@ readonly class CheckTokenAllowedAge
         $token = $this->requestAuthenticator->authenticate($request);
         $ageThreshold = Carbon::now()->subMinutes($maxAge);
 
-        if ($token->hasBeenIssuedBefore($ageThreshold)) {
+        $tokenIsRefreshed = $token->claims()->get('refreshed', false);
+
+        if ($token->hasBeenIssuedBefore($ageThreshold) || $tokenIsRefreshed) {
             throw new InvalidAccessTokenException(
-                "The access token cannot be older than {$maxAge} minutes for this request. Please request a new access token to continue.",
+                "The access token cannot be older than {$maxAge} minutes or be refreshed using a refresh token. Please request a new access token to continue.",
             );
         }
 
