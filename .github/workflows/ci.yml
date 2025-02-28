@@ -15,7 +15,7 @@ jobs:
           php_version: 8.2
 
       - name: PHPUnit
-        uses: php-actions/phpunit@v3
+        uses: php-actions/phpunit@v4
         with:
           args: --no-coverage
           php_version: 8.2

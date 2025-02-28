@@ -40,7 +40,7 @@ class CheckIfTokenIsFreshTest extends TestCase
             ->expects('hasBeenIssuedBefore')
             ->with(IsEqual::equalTo(Carbon::now()->subMinutes(15)))
             ->andReturnTrue();
-        
+
         $tokenMock->expects('claims->get')->andReturnFalse();
 
         $requestAuthenticator = Mockery::mock(JwtRequestAuthenticator::class, [
@@ -75,7 +75,6 @@ class CheckIfTokenIsFreshTest extends TestCase
         );
     }
 
-    /** @test */
     public function testItDoesNotConsiderRefreshedTokensAsFresh(): void
     {
         Carbon::setTestNow(now());

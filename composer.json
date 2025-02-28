@@ -7,7 +7,6 @@
     "php": ">=8.2",
     "laravel/framework": ">=9.0",
     "lcobucci/jwt": ">=5.0",
-    "myclabs/php-enum": ">=1.7",
     "myparcelcom/json-api": "^3.0"
   },
   "require-dev": {
