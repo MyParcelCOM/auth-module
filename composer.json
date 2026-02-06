@@ -7,7 +7,7 @@
     "php": ">=8.2",
     "laravel/framework": ">=9.0",
     "lcobucci/jwt": ">=5.0",
-    "myparcelcom/json-api": "dev-hotfix/guzzle-promises-bump"
+    "myparcelcom/json-api": "^4.0"
   },
   "require-dev": {
     "ext-openssl": "*",

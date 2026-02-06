@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82ba9823bd57d28cd1cd840be60d723e",
+    "content-hash": "4a1f4ba5798ff10a7b4959d0addc6650",
     "packages": [
         {
             "name": "brick/math",
@@ -2196,16 +2196,16 @@
         },
         {
             "name": "myparcelcom/json-api",
-            "version": "dev-hotfix/guzzle-promises-bump",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyParcelCOM/json-api.git",
-                "reference": "10737d49263a7897b583a223c9da781cf6e8351f"
+                "reference": "763b6d2398939fbbd961a302ac8a87de0fcd44f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyParcelCOM/json-api/zipball/10737d49263a7897b583a223c9da781cf6e8351f",
-                "reference": "10737d49263a7897b583a223c9da781cf6e8351f",
+                "url": "https://api.github.com/repos/MyParcelCOM/json-api/zipball/763b6d2398939fbbd961a302ac8a87de0fcd44f1",
+                "reference": "763b6d2398939fbbd961a302ac8a87de0fcd44f1",
                 "shasum": ""
             },
             "require": {
@@ -2232,9 +2232,9 @@
             "homepage": "https://www.myparcel.com",
             "support": {
                 "issues": "https://github.com/MyParcelCOM/json-api/issues",
-                "source": "https://github.com/MyParcelCOM/json-api/tree/hotfix/guzzle-promises-bump"
+                "source": "https://github.com/MyParcelCOM/json-api/tree/v4.0.0"
             },
-            "time": "2026-02-06T12:39:40+00:00"
+            "time": "2026-02-06T13:16:18+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -8991,7 +8991,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "myparcelcom/json-api": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
