@@ -1,7 +1,7 @@
 {
   "name": "myparcelcom/auth-module",
   "description": "Package for validating a JWT token and checking the contained scopes",
-  "homepage": "https://www.myparcel.com",
+  "homepage": "https://solutions.myparcel.com",
   "type": "library",
   "require": {
     "php": ">=8.2",
