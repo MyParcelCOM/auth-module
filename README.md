@@ -28,4 +28,4 @@ The following commands are available for development:
 `./mp.sh test <args>` - Run the PHPUnit tests.
 
 ## License
-All software by MyParcel.com is licensed under the [MyParcel.com general terms and conditions](https://www.myparcel.com/terms). 
+All software by MyParcel.com is licensed under the [MyParcel.com general terms and conditions](https://solutions.myparcel.com/terms). 
