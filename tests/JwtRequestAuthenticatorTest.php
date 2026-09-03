@@ -6,6 +6,7 @@ namespace MyParcelCom\AuthModule\Tests;
 
 use Error;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
@@ -46,7 +47,21 @@ class JwtRequestAuthenticatorTest extends TestCase
             'has'    => true,
             'header' => null,
             'query'  => $this->createTokenString([], null, 'some-user-id', []),
+            'path'   => 'oauth/logout',
+            'method' => 'GET',
+            'ip'     => '127.0.0.1',
         ]);
+
+        Log::shouldReceive('error')
+            ->once()
+            ->with(
+                'Access token supplied as query parameter instead of Authorization header',
+                [
+                    'path'   => 'oauth/logout',
+                    'method' => 'GET',
+                    'ip'     => '127.0.0.1',
+                ],
+            );
 
         $token = $this->authenticator->authenticate($request);
         $this->assertEquals('some-user-id', $token->claims()->get('user_id'));
