@@ -6,7 +6,6 @@ namespace MyParcelCom\AuthModule\Tests;
 
 use Error;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use MyParcelCom\AuthModule\JwtRequestAuthenticator;
@@ -35,33 +34,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     public function testAuthenticate(): void
     {
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
-        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
-
-        $token = $this->authenticator->authenticate($request);
-        $this->assertEquals('some-user-id', $token->claims()->get('user_id'));
-    }
-
-    public function testAuthenticateWithQueryParameter(): void
-    {
-        $request = Mockery::mock(Request::class, [
-            'has'    => true,
-            'header' => null,
-            'query'  => $this->createTokenString([], null, 'some-user-id', []),
-            'path'   => 'oauth/logout',
-            'method' => 'GET',
-            'ip'     => '127.0.0.1',
-        ]);
-
-        Log::shouldReceive('error')
-            ->once()
-            ->with(
-                'Access token supplied as query parameter instead of Authorization header',
-                [
-                    'path'   => 'oauth/logout',
-                    'method' => 'GET',
-                    'ip'     => '127.0.0.1',
-                ],
-            );
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $token = $this->authenticator->authenticate($request);
         $this->assertEquals('some-user-id', $token->claims()->get('user_id'));
@@ -71,7 +44,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     {
         $this->authenticator->setPublicKey('');
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
-        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);
@@ -81,7 +54,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     {
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
         $authorizationHeader .= 'this-will-make-it-invalid';
-        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);
@@ -94,7 +67,7 @@ class JwtRequestAuthenticatorTest extends TestCase
         $this->generateKeys();
 
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], null, 'some-user-id', []);
-        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);
@@ -103,7 +76,7 @@ class JwtRequestAuthenticatorTest extends TestCase
     public function testAuthenticateWithExpiredToken(): void
     {
         $authorizationHeader = 'Bearer ' . $this->createTokenString([], time() - 100, 'some-user-id', []);
-        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader, 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => $authorizationHeader]);
 
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);
@@ -111,7 +84,7 @@ class JwtRequestAuthenticatorTest extends TestCase
 
     public function testAccessTokenWithRequestWithoutAuthorizationHeader(): void
     {
-        $request = Mockery::mock(Request::class, ['header' => null, 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => null]);
 
         $this->expectException(MissingTokenException::class);
         $this->authenticator->authenticate($request);
@@ -119,7 +92,7 @@ class JwtRequestAuthenticatorTest extends TestCase
 
     public function testAccessTokenParsing(): void
     {
-        $request = Mockery::mock(Request::class, ['header' => 'r.i.p', 'has' => false]);
+        $request = Mockery::mock(Request::class, ['header' => 'r.i.p']);
 
         $this->expectException(InvalidAccessTokenException::class);
         $this->authenticator->authenticate($request);

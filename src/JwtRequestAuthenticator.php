@@ -7,7 +7,6 @@ namespace MyParcelCom\AuthModule;
 use DateTimeImmutable;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -71,7 +70,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
     }
 
     /**
-     * Get the token string from the Authorization: Bearer header or from the access_token query parameter.
+     * Get the token string from the `Authorization` header.
      *
      * @throws InvalidAccessTokenException
      * @throws MissingTokenException
@@ -81,18 +80,7 @@ class JwtRequestAuthenticator implements RequestAuthenticatorInterface
         $authorizationHeader = $request->header('Authorization');
 
         if (!$authorizationHeader) {
-            if (!$request->has('access_token')) {
-                throw new MissingTokenException();
-            }
-
-            // TODO: Remove this log if no warnings are reported after a few weeks
-            Log::error('Access token supplied as query parameter instead of Authorization header', [
-                'path'   => $request->path(),
-                'method' => $request->method(),
-                'ip'     => $request->ip(),
-            ]);
-
-            return $request->query('access_token');
+            throw new MissingTokenException();
         }
 
         if (!str_starts_with($authorizationHeader, 'Bearer ')) {
