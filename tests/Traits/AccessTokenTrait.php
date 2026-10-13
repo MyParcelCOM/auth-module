@@ -42,7 +42,7 @@ trait AccessTokenTrait
      */
     protected function createTokenString(
         array $scopes = [],
-        int $expiration = null,
+        ?int $expiration = null,
         string $userId = '',
         array $claims = []
     ): string {
@@ -67,7 +67,7 @@ trait AccessTokenTrait
      */
     protected function createParsedToken(
         array $scopes = [],
-        int $expiration = null,
+        ?int $expiration = null,
         string $userId = '',
         array $claims = []
     ): Token {
@@ -84,7 +84,7 @@ trait AccessTokenTrait
         string $userId = 'some-user-id',
         array $claims = [],
         array $scopes = [],
-        int $expiration = null,
+        ?int $expiration = null,
         array $headers = []
     ): array {
         $headers['Authorization'] = 'Bearer ' . $this->createTokenString($scopes, $expiration, $userId, $claims);
